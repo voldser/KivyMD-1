@@ -202,10 +202,9 @@ from kivy.properties import (
     ListProperty,
     NumericProperty,
     ObjectProperty,
-    StringProperty,
+    StringProperty, OptionProperty,
 )
 from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManagerException
 
 from kivymd import uix_path
@@ -213,9 +212,6 @@ from kivymd.material_resources import dp
 from kivymd.theming import ThemableBehavior, ThemeManager
 from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.behaviors import FakeRectangularElevationBehavior
-from kivymd.uix.behaviors.backgroundcolor_behavior import (
-    SpecificBackgroundColorBehavior,
-)
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.screen import MDScreen
 
@@ -421,9 +417,7 @@ class MDBottomNavigationItem(MDTab):
         pass
 
 
-class TabbedPanelBase(
-    ThemableBehavior, SpecificBackgroundColorBehavior, BoxLayout
-):
+class TabbedPanelBase(ThemableBehavior, MDFloatLayout):
     """
     A class that contains all variables a :class:`~kivy.properties.TabPannel`
     must have. It is here so I (zingballyhoo) don't get mad about
@@ -508,6 +502,62 @@ class MDBottomNavigation(TabbedPanelBase):
 
     :attr:`use_text` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
+    """
+
+    type = OptionProperty("box", options=("float", "box"))
+    """
+    Panel type. If the value is "float", then the panel will be positioned
+    float the content:
+
+    .. code-block:: kv
+
+        MDBottomNavigation:
+            panel_color: 0, 0, 1, .5
+            text_color_normal: 1, 1, 0, .7
+            radius: 16, 16, 0, 0
+            type: "float"
+
+            MDBottomNavigationItem:
+                name: "Autumn"
+                text: "Autumn"
+                icon: "weather-lightning-rainy"
+    
+                FitImage:
+                    source: "autumn.jpg"
+    
+            MDBottomNavigationItem:
+                name: "Winter"
+                text: "Winter"
+                icon: "snowflake"
+    
+                FitImage:
+                    source: "winter.jpg"
+    
+            MDBottomNavigationItem:
+                name: "Spring"
+                text: "Spring"
+                icon: "weather-sunny"
+
+                FitImage:
+                    source: "spring.jpg"
+
+    .. image:: https://github.com/HeaTTheatR/KivyMD-data/raw/master/gallery/kivymddoc/bottom-navigation-type-float.png
+        :align: center
+
+    If the value is "box" then the panel will be positioned below the content:
+
+    .. code-block:: kv
+
+        MDBottomNavigation:
+            type: "box"
+
+    .. image:: https://github.com/HeaTTheatR/KivyMD-data/raw/master/gallery/kivymddoc/bottom-navigation-type-box.png
+        :align: center
+
+    .. versionadded:: 1.0.0
+
+    :attr:`type` is an :class:`~kivy.properties.OptionProperty`
+    and defaults to `None`.
     """
 
     def __init__(self, **kwargs):
