@@ -1,14 +1,20 @@
 #:import sm kivy.uix.screenmanager
 #:import STANDARD_INCREMENT kivymd.material_resources.STANDARD_INCREMENT
+#:import Window kivy.core.window.Window
 
 
 <MDBottomNavigation>
-    orientation: "vertical"
     height: STANDARD_INCREMENT
 
     ScreenManager:
         id: tab_manager
+        size_hint_y: None
         transition: sm.FadeTransition(duration=.2)
+        y: Window.height - self.height if root.type == "box" else 0
+        height:
+            Window.height \
+            if root.type == "float" else \
+            Window.height - STANDARD_INCREMENT
         on_current:
             root.dispatch( \
             "on_switch_tabs", \
@@ -20,6 +26,7 @@
         id: bottom_panel
         size_hint_y: None
         height: STANDARD_INCREMENT
+        radius: root.radius
         md_bg_color:
             root.theme_cls.bg_dark \
             if not root.panel_color \
