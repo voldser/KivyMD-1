@@ -202,7 +202,8 @@ from kivy.properties import (
     ListProperty,
     NumericProperty,
     ObjectProperty,
-    StringProperty, OptionProperty,
+    StringProperty,
+    OptionProperty,
 )
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.screenmanager import ScreenManagerException
@@ -565,8 +566,13 @@ class MDBottomNavigation(TabbedPanelBase):
         self.register_event_type("on_switch_tabs")
         self.previous_tab = None
         self.widget_index = 0
-        Window.bind(on_resize=self.on_resize)
-        Clock.schedule_once(lambda x: self.on_resize(), 0)
+        # TODO: The following binding to the screen resizing method
+        #  dramatically hinders performance. At the moment I see no point in
+        #  using the `on_resize` method. Most likely, this method fixed
+        #  something in older versions of the library. But at the moment it is
+        #  useless. In any case, tests are needed.
+        # Window.bind(on_resize=self.on_resize)
+        # Clock.schedule_once(lambda x: self.on_resize(), 0)
 
     def switch_tab(self, name_tab) -> NoReturn:
         """Switching the tab by name."""
@@ -641,24 +647,24 @@ class MDBottomNavigation(TabbedPanelBase):
         Called when switching tabs. Returns the object of the tab to be opened.
         """
 
-    def on_size(self, *args) -> NoReturn:
-        self.on_resize()
-
-    def on_resize(
-        self,
-        instance: Union[WindowSDL, None] = None,
-        width: Union[int, None] = None,
-        do_again: bool = True,
-    ) -> NoReturn:
-        """Called when the application window is resized."""
-
-        full_width = 0
-        for tab in self.ids.tab_manager.screens:
-            full_width += tab.header.width
-            tab.header.text_color_normal = self.text_color_normal
-        self.ids.tab_bar.width = full_width
-        if do_again:
-            Clock.schedule_once(lambda x: self.on_resize(do_again=False), 0.1)
+    # def on_size(self, *args) -> NoReturn:
+    #     self.on_resize()
+    #
+    # def on_resize(
+    #     self,
+    #     instance: Union[WindowSDL, None] = None,
+    #     width: Union[int, None] = None,
+    #     do_again: bool = True,
+    # ) -> NoReturn:
+    #     """Called when the application window is resized."""
+    #
+    #     full_width = 0
+    #     for tab in self.ids.tab_manager.screens:
+    #         full_width += tab.header.width
+    #         tab.header.text_color_normal = self.text_color_normal
+    #     self.ids.tab_bar.width = full_width
+    #     if do_again:
+    #         Clock.schedule_once(lambda x: self.on_resize(do_again=False), 0.1)
 
     def add_widget(self, widget, **kwargs):
         if isinstance(widget, MDBottomNavigationItem):
