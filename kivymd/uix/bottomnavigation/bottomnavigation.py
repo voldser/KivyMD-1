@@ -565,7 +565,12 @@ class MDBottomNavigation(TabbedPanelBase):
         self.register_event_type("on_switch_tabs")
         self.previous_tab = None
         self.widget_index = 0
-        Window.bind(on_resize=self.on_resize)
+        # TODO: The following binding to the screen resizing method
+        #  dramatically hinders performance. At the moment I see no point in
+        #  using the `on_resize` method. Most likely, this method fixed
+        #  something in older versions of the library. But at the moment it is
+        #  useless. In any case, tests are needed.
+        # Window.bind(on_resize=self.on_resize)
         Clock.schedule_once(lambda x: self.on_resize(), 0)
 
     def switch_tab(self, name_tab) -> NoReturn:
